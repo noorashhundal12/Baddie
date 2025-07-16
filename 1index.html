@@ -40,7 +40,7 @@
       background-color: #ff85c1;
     }
 
-    #quiz, #certificateSection {
+    #quiz, #certificateSection, #resultBox {
       display: none;
       margin-top: 30px;
     }
@@ -74,11 +74,31 @@
       font-size: 22px;
       width: 80%;
     }
+
+    #resultBox {
+      background-color: #fff0f5;
+      border: 2px solid #ff69b4;
+      border-radius: 12px;
+      padding: 20px;
+      width: 80%;
+      margin: 20px auto;
+    }
+
+    #resultBox h2 {
+      color: #ff1493;
+      margin-bottom: 10px;
+    }
+
+    #resultVideo {
+      width: 100%;
+      max-width: 320px;
+      border-radius: 10px;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- 🔊 Baddie Anthem (autoplay trap beat) -->
   <audio autoplay loop>
     <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_b4ef50d726.mp3?filename=baddie-trap-beat-25565.mp3" type="audio/mpeg">
   </audio>
@@ -121,6 +141,14 @@
     <button onclick="finishQuiz()">Submit</button>
   </div>
 
+  <div id="resultBox">
+    <h2 id="resultMessage"></h2>
+    <video id="resultVideo" autoplay loop muted>
+      <source src="https://cdn.pixabay.com/video/2023/03/27/158933-814090079_tiny.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
   <div id="certificateSection">
     <div id="certificate"></div><br>
     <button onclick="downloadCertificate()">Download Certificate 🖨️</button>
@@ -156,9 +184,9 @@
         message = `🫣 ${name}, potential detected. Time to level up your slay!`;
       }
 
-      alert(message);
+      document.getElementById("resultMessage").innerText = message;
+      document.getElementById("resultBox").style.display = "block";
 
-      // Show certificate
       const today = new Date().toLocaleDateString();
       document.getElementById("certificate").innerHTML = `
         <h2>💖 Certified Baddie Certificate 💖</h2>
@@ -174,18 +202,18 @@
     function downloadCertificate() {
       const element = document.getElementById("certificate");
       const opt = {
-        margin:       1,
-        filename:     'baddie_certificate.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        margin: 1,
+        filename: 'baddie_certificate.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
       };
-      html2pdf().from(element).set(opt).save();
+
+      setTimeout(() => {
+        html2pdf().from(element).set(opt).save();
+      }, 500);
     }
   </script>
-
-  <!-- html2pdf library for certificate download -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
 </body>
 </html>
