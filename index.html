@@ -2,19 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Baddie Quiz</title>
+  <title>Certified Baddie Quiz</title>
   <style>
     body {
       background-color: white;
-      color: #ff69b4; /* light pink text */
+      color: #ff69b4;
       font-family: 'Arial', sans-serif;
       text-align: center;
       padding: 50px 20px;
     }
 
     h1 {
-      color: #ff1493; /* deep pink */
-      font-size: 36px;
+      color: #ff1493;
+      font-size: 38px;
+      animation: sparkle 2s infinite;
+    }
+
+    @keyframes sparkle {
+      0% { text-shadow: 0 0 5px #ff69b4; }
+      50% { text-shadow: 0 0 15px #ff69b4; }
+      100% { text-shadow: 0 0 5px #ff69b4; }
     }
 
     button {
@@ -33,7 +40,7 @@
       background-color: #ff85c1;
     }
 
-    #quiz {
+    #quiz, #certificateSection {
       display: none;
       margin-top: 30px;
     }
@@ -46,21 +53,39 @@
       width: 80%;
     }
 
-    input[type="radio"] {
-      margin-right: 10px;
-    }
-
     label {
       display: block;
       margin: 10px 0;
       font-size: 16px;
     }
+
+    input[type="radio"], input[type="text"] {
+      margin-right: 10px;
+    }
+
+    #certificate {
+      margin-top: 40px;
+      padding: 30px;
+      border: 3px solid #ff69b4;
+      border-radius: 16px;
+      display: inline-block;
+      background-color: #fff0f5;
+      color: #ff1493;
+      font-size: 22px;
+      width: 80%;
+    }
   </style>
 </head>
 <body>
 
+  <!-- 🔊 Baddie Anthem (autoplay trap beat) -->
+  <audio autoplay loop>
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_b4ef50d726.mp3?filename=baddie-trap-beat-25565.mp3" type="audio/mpeg">
+  </audio>
+
   <h1>Are you a real baddie? 💅</h1>
 
+  <input type="text" id="username" placeholder="Enter your name (optional)" style="padding:10px; font-size:16px; border-radius:8px;"><br><br>
   <button onclick="alert('Slay queen 👑 You already knew it!')">Yes</button>
   <button onclick="showQuiz()">Test Myself</button>
 
@@ -96,6 +121,11 @@
     <button onclick="finishQuiz()">Submit</button>
   </div>
 
+  <div id="certificateSection">
+    <div id="certificate"></div><br>
+    <button onclick="downloadCertificate()">Download Certificate 🖨️</button>
+  </div>
+
   <script>
     function showQuiz() {
       document.getElementById("quiz").style.display = "block";
@@ -110,26 +140,51 @@
       ];
 
       let score = 0;
-
       if (answers[0].includes("own it")) score++;
       if (answers[1].includes("savage burn")) score++;
       if (answers[2].includes("Unbothered")) score++;
       if (answers[3].includes("game changed")) score++;
 
-      let result = "";
+      const name = document.getElementById("username").value || "Anonymous Slay";
+      let message = "";
 
       if (score >= 3) {
-        result = "💅 Certified Baddie Alert! You slay effortlessly. 🔥👑";
+        message = `💅 ${name}, you are a Certified Baddie 🔥👑`;
       } else if (score === 2) {
-        result = "✨ Almost there, queen! Just channel your inner baddie 💖";
+        message = `✨ ${name}, you're almost there. Just a little more glow-up needed 💖`;
       } else {
-        result = "🫣 Hmm... potential detected. Time to glow up and try again!";
+        message = `🫣 ${name}, potential detected. Time to level up your slay!`;
       }
 
-      alert(result);
+      alert(message);
+
+      // Show certificate
+      const today = new Date().toLocaleDateString();
+      document.getElementById("certificate").innerHTML = `
+        <h2>💖 Certified Baddie Certificate 💖</h2>
+        <p>This certifies that</p>
+        <h3>${name}</h3>
+        <p>has officially slayed the baddie quiz</p>
+        <p>Date: ${today}</p>
+        <p>💅 Stay fierce, stay fabulous 💅</p>
+      `;
+      document.getElementById("certificateSection").style.display = "block";
+    }
+
+    function downloadCertificate() {
+      const element = document.getElementById("certificate");
+      const opt = {
+        margin:       1,
+        filename:     'baddie_certificate.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      html2pdf().from(element).set(opt).save();
     }
   </script>
 
+  <!-- html2pdf library for certificate download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </body>
 </html>
-
